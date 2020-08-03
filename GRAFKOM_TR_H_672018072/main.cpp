@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <iostream>
+#include "NFG.h"
 
-int w = 1024, h = 1024;
-static float ypoz = 0, zpoz = 0, xpoz = 0, a = 0, b = 0, c = -10;
+int w = 600, h = 600;
+static float ypoz = 0, zpoz = 0, xpoz = 0, a = 0, b = 0, c = 0;
 static float xScale = 1, yScale = 1, zScale = 1;
 
 float xrot = 0.0f;
@@ -132,10 +133,12 @@ void renderScene(void) {
     glClearColor(0, 0, 0, 1);
 
     glLoadIdentity();
-    gluLookAt(0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
+    //gluLookAt(0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    glPushMatrix();
+    glTranslatef(0.0, -1.0, 0.0);
     glTranslatef(a, b, c);
-    glScalef(xScale, yScale, zScale);
+
+    //glScalef(xScale, yScale, zScale);
     glRotatef(xpoz, 1, 0, 0);
     glRotatef(ypoz, 0, 1, 0);
     glRotatef(zpoz, 0, 0, 1);
@@ -144,14 +147,32 @@ void renderScene(void) {
 
     glRotatef(xrot, 1.0f, 0.0f, 0.0f);
     glRotatef(yrot, 0.0f, 1.0f, 0.0f);
+    glColor3ub(255, 255, 255);
+    float x1 = 0, x2, x3, y1, y2, y3, z1, z2, z3;
+    for (int i = 0; i < 718; i++) {
 
+        x1 = coorVertex[Sequence[i].i1].x;
+        x2 = coorVertex[Sequence[i].i2].x;
+        x3 = coorVertex[Sequence[i].i3].x;
+        y1 = coorVertex[Sequence[i].i1].y;
+        y2 = coorVertex[Sequence[i].i2].y;
+        y3 = coorVertex[Sequence[i].i3].y;
+        z1 = coorVertex[Sequence[i].i1].z;
+        z2 = coorVertex[Sequence[i].i2].z;
+        z3 = coorVertex[Sequence[i].i3].z;
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(x1, y1, z1);
+        glVertex3f(x2, y2, z2);
+        glVertex3f(x3, y3, z3);
+        glEnd();
+    }
     float d1[] = { 0.2, 0.5, 0.8, 1.0 };
     float d2[] = { 0.3, 0.5, 0.6, 1.0 };
     float d3[] = { 0.4, 0.2, 0.2, 1.0 };
     glMaterialfv(GL_FRONT, GL_DIFFUSE, d1);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, d2);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, d3);
-    
+    glPopMatrix();
     glutSwapBuffers();
 }
 
@@ -159,7 +180,7 @@ void resize(int w1, int h1) {
     glViewport(0, 0, w1, h1);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0, (float)w1 / (float)h1, 1.0, 300.0);
+    //gluPerspective(45.0, (float)w1 / (float)h1, 1.0, 300.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -176,6 +197,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(w, h);
     glutCreateWindow("TR_GRAFKOM_672018072_672018224_672018239");
 
+    load("Woman1.nfg");
     glutDisplayFunc(renderScene);
     glutReshapeFunc(resize);
     glutKeyboardFunc(myKeyboard);
