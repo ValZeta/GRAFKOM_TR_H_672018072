@@ -158,6 +158,11 @@ void resize(int w1, int h1) {
 void timer(int value) {
     glutPostRedisplay();
     glutTimerFunc(1000 / 60, timer, 0);
+    if (!mouseDown)
+    {
+        yrot += 1.0f;
+    }
+    glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {
